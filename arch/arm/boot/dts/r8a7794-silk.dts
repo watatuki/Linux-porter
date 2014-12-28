@@ -181,6 +181,14 @@
 	clock-frequency = <20000000>;
 };
 
+&i2c0 {
+	pinctrl-0 = <&i2c0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+	clock-frequency = <400000>;
+};
+
 &i2c1 {
 	pinctrl-0 = <&i2c1_pins>;
 	pinctrl-names = "default";
@@ -209,6 +217,11 @@
 		renesas,groups = "du0_rgb888", "du0_sync", "du0_clk_out",
 				 "du1_rgb666", "du1_sync", "du1_clk_out";
 		renesas,function = "du";
+	};
+
+	i2c0_pins: i2c0 {
+		renesas,groups = "i2c0_d";
+		renesas,function = "i2c0";
 	};
 
 	i2c1_pins: i2c1 {
