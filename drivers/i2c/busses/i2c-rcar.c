@@ -582,8 +582,6 @@ static int rcar_i2c_master_xfer(struct i2c_adapter *adap,
 	unsigned long flags;
 	int i, ret, timeout;
 
-	pm_runtime_get_sync(dev);
-
 	/*-------------- spin lock -----------------*/
 	spin_lock_irqsave(&priv->lock, flags);
 
@@ -655,8 +653,6 @@ static int rcar_i2c_master_xfer(struct i2c_adapter *adap,
 
 		ret = i + 1; /* The number of transfer */
 	}
-
-	pm_runtime_put(dev);
 
 	if (ret < 0 && ret != -ENXIO)
 		dev_err(dev, "error %d : %x\n", ret, priv->flags);
@@ -752,6 +748,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
 	}
 
 	pm_runtime_enable(dev);
+	pm_runtime_get_sync(dev);
 	platform_set_drvdata(pdev, priv);
 
 	ret = i2c_add_numbered_adapter(adap);
@@ -772,6 +769,7 @@ static int rcar_i2c_remove(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 
 	i2c_del_adapter(&priv->adap);
+	pm_runtime_put(dev);
 	pm_runtime_disable(dev);
 
 	return 0;
